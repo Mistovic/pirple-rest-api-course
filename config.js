@@ -8,14 +8,16 @@ var enviroments = {};
 enviroments.staging = {
 	"httpPort": 3000,
 	"httpsPort": 3001,
-	envName: "staging",
+	"envName": "staging",
+	"hashingSecret" : "thisIsASecret"
 };
 
 // Production enviroment
 enviroments.production = {
 	"httpPort": 5000,
 	"httpsPort": 5001,
-	envName: "production",
+	"envName": "production",
+	"hashingSecret" : "thisIsASecret"
 };
 
 // Determine which env was passed as a comand-line argument

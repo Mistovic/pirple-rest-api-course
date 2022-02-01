@@ -11,7 +11,7 @@ const config = require("./config");
 const fs = require("fs");
 const _data = require("./lib/data");
 const _handlers = require("./lib/handlers");
-
+const helpers = require("./lib/helpers");
 
 // The server should respond to all server req with a string
 // -- ! This function instances the server
@@ -71,7 +71,7 @@ var unifiedServer = function (req, res) {
 
 		// Choose the handler this req shoud go to
 		// if one is not found use not found
-		let choosenHandler = typeof router[trimmedPath] !== "undefined" ? router[trimmedPath] : handlers.notFound;
+		let choosenHandler = typeof router[trimmedPath] !== "undefined" ? router[trimmedPath] : _handlers.notFound;
 
 		// Construct data object to send to the handlers
 		let data = {
@@ -79,13 +79,15 @@ var unifiedServer = function (req, res) {
 			queryStringObj: queryStringObj,
 			method: method,
 			headers: headers,
-			payload: buffer,
+			payload: helpers.parseToJson(buffer),
 		};
 
 		// Route the request to the handler specified in the router
 		choosenHandler(data, function (statusCode, payload) {
 			// Default status code
 			statusCode = typeof statusCode == "number" ? statusCode : 200;
+
+			console.log("Payload in Choosen handler: ", payload)
 
 			// use the payload called by the handler or default empty obj
 			payload = typeof payload == "object" ? payload : {};
@@ -107,5 +109,6 @@ var unifiedServer = function (req, res) {
 // Defining a request router
 let router = {
 	ping: _handlers.ping,
-	users: _handlers.users
+	users: _handlers.users,
+	notFound: _handlers.notFound,
 };
